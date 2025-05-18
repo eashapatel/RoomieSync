@@ -25,6 +25,8 @@ interface ChoresPageProps {
   groupId: string;
 }
 
+const BASE_URL = "http://127.0.0.1:3000";
+
 const ChoresPage: React.FC<ChoresPageProps> = ({ groupId }) => {
   const [chores, setChores] = useState<Chore[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -36,7 +38,7 @@ const ChoresPage: React.FC<ChoresPageProps> = ({ groupId }) => {
     try {
       // Fetch chores for the current group
       const choresResponse = await axios.get<Chore[]>(
-        `/chore/group/${groupId}`
+        `${BASE_URL}/chore/group/${groupId}`
       );
       const choresData = choresResponse.data;
 

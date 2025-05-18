@@ -56,7 +56,7 @@ def AlarmRoutes(app: Flask, supabase: Client):
                     "alarm_created_at": alarm.get("created_at"),
                     "alarm_updated_at": alarm.get("updated_at"),
                     "user": {
-                        "user_id": alarm.get("user_id"),
+                        "id": alarm.get("user_id"),
                         "first_name": alarm.get("users", {}).get("first_name"),
                         "last_name": alarm.get("users", {}).get("last_name"),
                         "email": alarm.get("users", {}).get("email"),
@@ -64,6 +64,7 @@ def AlarmRoutes(app: Flask, supabase: Client):
                 }
                 alarms.append(alarm_data)
 
+            print(alarms)
             return jsonify({"alarms": alarms}), 200
 
         except Exception as e:

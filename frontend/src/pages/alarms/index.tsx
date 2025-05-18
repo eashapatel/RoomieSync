@@ -12,9 +12,16 @@ type Alarm = {
 type User = {
     id: string;
     group_id: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
 };
+type GroupAlarm = {
+    alarm_id: string;
+    alarm_name: string;
+    alarm_time: string;
+    user: User;
+}
 const BASE_URL = 'http://127.0.0.1:3000';
 
 export const fetchUserDetails = async () => {
@@ -42,7 +49,7 @@ function AlarmsPage() {
     const [newAlarmName, setNewAlarmName] = useState('');
     const [newAlarmTime, setNewAlarmTime] = useState('');
     const [userAlarms, setUserAlarms] = useState<Alarm[]>([]);
-    const [groupAlarms, setGroupAlarms] = useState<Alarm[]>([]);
+    const [groupAlarms, setGroupAlarms] = useState<GroupAlarm[]>([]);
     const [user, setUser] = useState({} as User);
 
     useEffect(() => {
@@ -60,7 +67,7 @@ function AlarmsPage() {
                 // Fetch alarms for the user's group
                 const groupAlarmsResponse = await fetch(`${BASE_URL}/alarm/groups/${userData.group_id}`);
                 const groupAlarmsData = await groupAlarmsResponse.json();
-                setGroupAlarms(groupAlarmsData);
+                setGroupAlarms(groupAlarmsData.alarms);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -91,7 +98,6 @@ function AlarmsPage() {
                 // Add the new alarm to the user's alarms
                 if (data[0]) {
                     setUserAlarms([...userAlarms, data[0]]);
-                    setGroupAlarms([...groupAlarms, data[0]]);
                 }
 
                 // Reset the form
@@ -151,11 +157,11 @@ function AlarmsPage() {
                 <h2 className={styles.subheading}>Group Alarms</h2>
                 <div className={styles.alarmList}>
                     {(Array.isArray(groupAlarms) ? groupAlarms : []).map((alarm) => (
-                        <div className={styles.alarmCard} key={alarm.id || Math.random()}>
+                        <div className={styles.alarmCard} key={alarm.alarm_id || Math.random()}>
                             <div className={styles.alarmInfo}>
-                                <h3 className={styles.alarmName}>{alarm?.name || "Unnamed Alarm"}</h3>
-                                <p className={styles.alarmTime}>⏰ {alarm?.time || "Unknown Time"}</p>
-                                <p className={styles.alarmUser}>👤 Created by User ID: {alarm?.user_id || "Unknown User"}</p>
+                                <h3 className={styles.alarmName}>{alarm?.alarm_name || "Unnamed Alarm"}</h3>
+                                <p className={styles.alarmTime}>⏰ {alarm?.alarm_time || "Unknown Time"}</p>
+                                <p className={styles.alarmUser}>👤 Created by User ID: {alarm?.user?.first_name || "Unknown User"}</p>
                             </div>
                         </div>
                     ))}
